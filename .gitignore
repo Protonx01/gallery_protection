@@ -1,0 +1,8 @@
+.DS_Store
+*.pyc
+*.egg-info
+*.swp
+tags
+gallery_protection/docs/current
+node_modules/
+.vscode/
