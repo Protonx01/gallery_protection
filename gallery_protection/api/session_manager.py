@@ -70,71 +70,6 @@ def create_viewing_session():
             "error": str(e)
         }
 
-#@frappe.whitelist(allow_guest=True)
-#def validate_viewing_session():
-#    """
-#    Validate if a viewing session is still active and valid
-#    """
-#    try:
-#        if frappe.local.request.method != "POST":
-#            frappe.throw(_("Invalid request method. Use POST."), frappe.PermissionError)
-#
-#        session_token = frappe.form_dict.get("session_token")
-#        if not session_token:
-#            return {
-#                "valid": False,
-#                "message": "No session token provided"
-#            }
-#            
-#        # Get session data from cache
-#        cache_key = f"viewing_session:{session_token}"
-#        session_data_str = frappe.cache().get_value(cache_key)
-#        
-#        if not session_data_str:
-#            return {
-#                "valid": False,
-#                "message": "Session not found or expired"
-#            }
-#        
-#        session_data = json.loads(session_data_str)
-#        
-#        # Check if session is still active
-#        if not session_data.get("is_active", False):
-#            return {
-#                "valid": False,
-#                "message": "Session has been deactivated"
-#            }
-#        
-#        # Check expiry
-#        expires_at = frappe.utils.get_datetime(session_data["expires_at"])
-#        if now_datetime() > expires_at:
-#            # Clean up expired session
-#            frappe.cache().delete_value(cache_key)
-#            return {
-#                "valid": False,
-#                "message": "Session has expired"
-#            }
-#        
-#        # Check request limits
-#        if session_data.get("image_requests", 0) >= session_data.get("max_requests", 200):
-#            return {
-#                "valid": False,
-#                "message": "Session request limit exceeded"
-#            }
-#        
-#        return {
-#            "valid": True,
-#            "session_data": session_data,
-#            "message": "Session is valid"
-#        }
-#        
-#    except Exception as e:
-#        frappe.log_error(f"Error validating session: {str(e)}")
-#        return {
-#            "valid": False,
-#            "message": "Error validating session"
-#        }
-#
 def increment_session_usage(session_token):
     """
     Increment the image request counter for a session
@@ -334,8 +269,8 @@ def validate_viewing_session_internal(session_token):
 
 @frappe.whitelist(allow_guest=True)
 def validate_viewing_session(session_token):
-    if frappe.local.request.method != "POST":
-        frappe.throw(_("Invalid request method. Use POST."), frappe.PermissionError)
+    # if frappe.local.request.method != "POST":
+    #     frappe.throw(_("Invalid request method. Use POST."), frappe.PermissionError)
 
     if not session_token:
         return {
