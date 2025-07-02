@@ -47,7 +47,7 @@ def create_viewing_session():
         }
         
         # Store session in cache (Redis if available, else database)
-        cache_key = f"viewing_session:{session_token}"
+        cache_key = f"session_token:{session_token}"
         frappe.cache().set_value(cache_key, json.dumps(session_data), expires_in_sec=7200)  # 2 hours
         
         # Log session creation
@@ -193,7 +193,7 @@ def refresh_viewing_session():
     if frappe.local.request.method != "POST":
         frappe.throw(_("Invalid request method. Use POST."), frappe.PermissionError)
 
-    session_token = frappe.form_dict.get("session_token")
+    session_token = frappe.get_request_header("X-Session-Token")
     if not session_token:
         return {
             "success": False,
@@ -204,7 +204,7 @@ def refresh_viewing_session():
     if not validation_result["valid"]:
         return validation_result       
     # Extend session by 2 more hours
-    cache_key = f"viewing_session:{session_token}"
+    cache_key = f"session_token:{session_token}"
     session_data = validation_result["session_data"]
         
     # Update expiry time
@@ -220,10 +220,24 @@ def refresh_viewing_session():
         "expires_at": new_expires_at.isoformat(),
         "expires_in_seconds": 7200
     }
+
+@frappe.whitelist(allow_guest=True)
+def validate_viewing_session(session_token):
+    # if frappe.local.request.method != "POST":
+    #     frappe.throw(_("Invalid request method. Use POST."), frappe.PermissionError)
+
+    if not session_token:
+        return {
+            "valid": False,
+            "message": "No session token provided"
+        }
+
+    return validate_viewing_session_internal(session_token)
+
         
 def validate_viewing_session_internal(session_token):
     try:
-        cache_key = f"viewing_session:{session_token}"
+        cache_key = f"session_token:{session_token}"
         session_data_str = frappe.cache().get_value(cache_key)
 
         if not session_data_str:
@@ -264,18 +278,7 @@ def validate_viewing_session_internal(session_token):
         frappe.log_error(f"Error validating session: {str(e)}")
         return {
             "valid": False,
-            "message": "Error validating session"
+            "message": "Error validating session",
+            "description":{str(e)}
         }
 
-@frappe.whitelist(allow_guest=True)
-def validate_viewing_session(session_token):
-    # if frappe.local.request.method != "POST":
-    #     frappe.throw(_("Invalid request method. Use POST."), frappe.PermissionError)
-
-    if not session_token:
-        return {
-            "valid": False,
-            "message": "No session token provided"
-        }
-
-    return validate_viewing_session_internal(session_token)

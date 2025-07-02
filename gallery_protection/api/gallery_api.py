@@ -190,7 +190,7 @@ def serve_image(**kwargs):
             frappe.throw("Invalid service ID")
         
         if secure_folder_type not in ['gallery', 'galleryHalf']:
-            frappe.throw("Invalid folder type. Must be 'gallery' or 'galleryHalf'")
+            frappe.throw("Invalid folder type.")
         
         if not secure_name:
             frappe.throw("Invalid image name")
@@ -220,10 +220,11 @@ def serve_image(**kwargs):
             headers={
                 'Content-Disposition': f'inline; filename="{secure_name}"',
                 'Cache-Control': 'public, max-age=31536000',
-                'Content-Length': str(len(file_content))
+                'Content-Length': str(len(file_content)),
+                'Access-Control-Allow-Origin': '*',  # for CORS
+                'Access-Control-Allow-Headers': 'Content-Type, X-Session-Token'
             }
         )
-        
         return response
         
     except frappe.DoesNotExistError:

@@ -5,6 +5,12 @@ app_description = "app for security protocols of the gallery images "
 app_email = "info@example.com"
 app_license = "MIT"
 
+
+
+override_whitelisted_methods = {
+    'frappe.handler': 'your_app.api.cors_handler'
+}
+
 # Includes in <head>
 # ------------------
 
