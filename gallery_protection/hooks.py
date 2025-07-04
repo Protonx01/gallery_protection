@@ -7,9 +7,9 @@ app_license = "MIT"
 
 
 
-override_whitelisted_methods = {
-    'frappe.handler': 'your_app.api.cors_handler'
-}
+# override_whitelisted_methods = {
+#     'frappe.handler': 'your_app.api.cors_handler'
+# }
 
 # Includes in <head>
 # ------------------

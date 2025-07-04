@@ -6,7 +6,8 @@ from werkzeug.wrappers import Response
 from werkzeug.utils import secure_filename
 import mimetypes
 import warnings
-from .session_manager import validate_viewing_session, increment_session_usage
+from .session_manager import validate_viewing_session_internal, increment_session_usage
+from .watermarker import add_watermark
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -21,7 +22,7 @@ def require_viewing_session(method):
             if not session_token:
                 frappe.throw(_("Missing session token in headers"))
             
-            validation_result = validate_viewing_session(session_token)
+            validation_result = validate_viewing_session_internal(session_token)
             if not validation_result.get("valid"):
                 return {
                     "success": False,
@@ -211,8 +212,11 @@ def serve_image(**kwargs):
         if not mime_type or not mime_type.startswith('image/'):
             frappe.throw("File is not a valid image")
         
-        with open(real_image_path, 'rb') as f:
-            file_content = f.read()
+        if secure_folder_type == "gallery":
+            file_content = add_watermark(real_image_path)
+        else:
+            with open(real_image_path, 'rb') as f:
+                file_content = f.read()
         
         response = Response(
             file_content,
@@ -221,7 +225,7 @@ def serve_image(**kwargs):
                 'Content-Disposition': f'inline; filename="{secure_name}"',
                 'Cache-Control': 'public, max-age=31536000',
                 'Content-Length': str(len(file_content)),
-                'Access-Control-Allow-Origin': '*',  # for CORS
+                #'Access-Control-Allow-Origin': '*',  # for CORS
                 'Access-Control-Allow-Headers': 'Content-Type, X-Session-Token'
             }
         )

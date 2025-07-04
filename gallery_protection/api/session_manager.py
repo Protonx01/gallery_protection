@@ -222,10 +222,10 @@ def refresh_viewing_session():
     }
 
 @frappe.whitelist(allow_guest=True)
-def validate_viewing_session(session_token):
-    # if frappe.local.request.method != "POST":
-    #     frappe.throw(_("Invalid request method. Use POST."), frappe.PermissionError)
+def validate_viewing_session():
 
+    session_token = frappe.get_request_header("X-Session-Token")
+    
     if not session_token:
         return {
             "valid": False,
