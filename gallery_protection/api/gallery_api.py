@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 import mimetypes
 import warnings
 from .session_manager import validate_viewing_session_internal, increment_session_usage
-from .watermarker import add_watermark
+from .watermarker import add_watermark, add_watermark_half
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -217,6 +217,7 @@ def serve_image(**kwargs):
         else:
             with open(real_image_path, 'rb') as f:
                 file_content = f.read()
+            # file_content = add_watermark_half(real_image_path)
         
         response = Response(
             file_content,
