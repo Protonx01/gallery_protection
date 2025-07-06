@@ -8,6 +8,7 @@ import mimetypes
 import warnings
 from .session_manager import validate_viewing_session_internal, increment_session_usage
 from .watermarker import add_watermark, add_watermark_half
+import magic
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -208,7 +209,7 @@ def serve_image(**kwargs):
         if not os.path.isfile(real_image_path):
             frappe.throw("Invalid image file")
         
-        mime_type, _ = mimetypes.guess_type(real_image_path)
+        mime_type = magic.from_file(real_image_path, mime=True)
         if not mime_type or not mime_type.startswith('image/'):
             frappe.throw("File is not a valid image")
         
