@@ -12,7 +12,7 @@ def add_watermark(image_path: str, text: str = "amanksolutions.com") -> bytes:
 
     # Load DejaVu font or fallback
     try:
-        font = ImageFont.truetype("/usr/share/fonts/Adwaita/AdwaitaSans-Regular.ttf", 50)
+        font = ImageFont.truetype("gallery_protection/Michroma-Regular.ttf", 40)
     except IOError:
         font = ImageFont.load_default()
 
@@ -50,7 +50,7 @@ def add_watermark_half(image_path: str, text: str = "amanksolutions.com") -> byt
 
     # Load DejaVu font or fallback
     try:
-        font = ImageFont.truetype("/usr/share/fonts/Adwaita/AdwaitaSans-Regular.ttf", 40)
+        font = ImageFont.truetype("gallery_protection/Michroma-Regular.ttf", 40)
     except IOError:
         font = ImageFont.load_default()
 
