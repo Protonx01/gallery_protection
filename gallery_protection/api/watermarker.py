@@ -1,5 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import io
+import os
+import frappe
 
 def add_watermark(image_path: str, text: str = "amanksolutions.com") -> bytes:
     original_image = Image.open(image_path)
@@ -12,11 +14,13 @@ def add_watermark(image_path: str, text: str = "amanksolutions.com") -> bytes:
 
     # Load DejaVu font or fallback
     try:
-        font = ImageFont.truetype("gallery_protection/Michroma-Regular.ttf", 40)
+        font_path = os.path.join(
+            frappe.get_app_path('gallery_protection'), 'Michroma-Regular.ttf'
+        )
+        font = ImageFont.truetype(font_path, 40)
     except IOError:
-        font = ImageFont.load_default()
+        font = ImageFont.load_default()    # Get size of text to space correctly
 
-    # Get size of text to space correctly
     bbox = draw.textbbox((0, 0), text, font=font)
     text_width = bbox[2] - bbox[0]
     text_height = bbox[3] - bbox[1]

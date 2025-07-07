@@ -8,7 +8,7 @@ import mimetypes
 import warnings
 from .session_manager import validate_viewing_session_internal, increment_session_usage
 from .watermarker import add_watermark, add_watermark_half
-import magic
+# import magic
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -209,10 +209,10 @@ def serve_image(**kwargs):
         if not os.path.isfile(real_image_path):
             frappe.throw("Invalid image file")
         
-        mime_type = magic.from_file(real_image_path, mime=True)
-        if not mime_type or not mime_type.startswith('image/'):
-            frappe.throw("File is not a valid image")
-        
+        #mime_type = magic.from_file(real_image_path, mime=True)
+        #if not mime_type or not mime_type.startswith('image/'):
+        #    frappe.throw("File is not a valid image")
+        #
         if secure_folder_type == "gallery":
             file_content = add_watermark(real_image_path)
         else:
@@ -222,7 +222,7 @@ def serve_image(**kwargs):
         
         response = Response(
             file_content,
-            mimetype=mime_type,
+            mimetype="image/webp",
             headers={
                 'Content-Disposition': f'inline; filename="{secure_name}"',
                 'Cache-Control': 'public, max-age=31536000',
