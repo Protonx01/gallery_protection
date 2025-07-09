@@ -33,7 +33,7 @@ def add_watermark(image_path: str, text: str = "amanksolutions.com") -> bytes:
     #     for x in range(-text_width, width + text_width, x_spacing):
     #         draw.text((x + row_offset, y), text, font=font, fill=(150, 150, 150, 50))
 
-    draw.text((50, height//2), text, font=font, fill=(50, 50, 50, 50))
+    draw.text((50, height//2), text, font=font, fill=(50, 50, 50, 255))
     draw.text(((width-text_width)-50, height//2), text, font=font, fill=(50, 50, 50, 50))
 
     # Combine and convert to RGB
@@ -54,9 +54,12 @@ def add_watermark_half(image_path: str, text: str = "amanksolutions.com") -> byt
 
     # Load DejaVu font or fallback
     try:
-        font = ImageFont.truetype("gallery_protection/Michroma-Regular.ttf", 40)
+        font_path = os.path.join(
+            frappe.get_app_path('gallery_protection'), 'Michroma-Regular.ttf'
+        )
+        font = ImageFont.truetype(font_path, 40)
     except IOError:
-        font = ImageFont.load_default()
+        font = ImageFont.load_default()    # Get size of text to space correctly
 
     # Get size of text to space correctly
     bbox = draw.textbbox((0, 0), text, font=font)

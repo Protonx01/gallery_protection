@@ -209,10 +209,13 @@ def serve_image(**kwargs):
         if not os.path.isfile(real_image_path):
             frappe.throw("Invalid image file")
         
-        #mime_type = magic.from_file(real_image_path, mime=True)
-        #if not mime_type or not mime_type.startswith('image/'):
+        # mime_type = magic.from_file(real_image_path, mime=True)
+        # if not mime_type or not mime_type.startswith('image/'):
         #    frappe.throw("File is not a valid image")
-        #
+
+        mime_type = real_image_path.split(".")[-1]
+        print(f"mime type: {mime_type}")
+
         if secure_folder_type == "gallery":
             file_content = add_watermark(real_image_path)
         else:
@@ -222,6 +225,7 @@ def serve_image(**kwargs):
         
         response = Response(
             file_content,
+            # mimetype="image/"+mime_type,
             mimetype="image/webp",
             headers={
                 'Content-Disposition': f'inline; filename="{secure_name}"',
