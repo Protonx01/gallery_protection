@@ -33,7 +33,7 @@ def add_watermark(image_path: str, text: str = "amanksolutions.com") -> bytes:
     #     for x in range(-text_width, width + text_width, x_spacing):
     #         draw.text((x + row_offset, y), text, font=font, fill=(150, 150, 150, 50))
 
-    draw.text((50, height//2), text, font=font, fill=(50, 50, 50, 255))
+    draw.text((50, height//2), text, font=font, fill=(50, 50, 50, 50))
     draw.text(((width-text_width)-50, height//2), text, font=font, fill=(50, 50, 50, 50))
 
     # Combine and convert to RGB
