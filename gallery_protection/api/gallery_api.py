@@ -221,7 +221,7 @@ def serve_image(**kwargs):
         else:
             with open(real_image_path, 'rb') as f:
                 file_content = f.read()
-            # file_content = add_watermark_half(real_image_path)
+            file_content = add_watermark_half(real_image_path)
         
         response = Response(
             file_content,
