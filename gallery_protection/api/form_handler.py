@@ -26,7 +26,7 @@ def send_form_mail(data):
     html_body = frappe.render_template("gallery_protection/templates/email/form_template.html", data)
 
     frappe.sendmail(
-        recipients=["contact@amanksolutions.com"],
+        recipients=["proyagchakraborty@proton.me"],
         subject=f"New Contact Request on {data['websiteSource']}",
         message=html_body,
     )
